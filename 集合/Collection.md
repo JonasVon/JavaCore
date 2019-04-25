@@ -4,7 +4,7 @@
 
 `Collection` 是站在集合“食物链”最顶端的接口，它是集合的最基本定义。实现了 `Collection` 接口的类都必须提供两套标准的构造函数，一个是无参的，用于创建一个空的 `Collection` ；另外一个是带有 `Collection` 参数的，用于创建一个新的 `Collection` 。
 
-![](C:\Users\jonas\Desktop\JavaCore\集合\img\collection-2018-03-02.jpg)
+![](/img/collection-2018-03-02.jpg)
 
 从上图可见，咱们经常使用的 `List` 和 `Set` 是 `Collection` 的子接口，分别代表着两种不同的集合。
 
