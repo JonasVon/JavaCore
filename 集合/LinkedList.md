@@ -1,10 +1,14 @@
 ##  LinkedList
 
+---
+
 ### 一、概述
 
 `LinkedList` 与 `ArrayList` 一样实现了 `List` 接口，不同的是， `ArrayList` 底层储存数据的是大小“可变”的数组（具体的分析请看 `ArrayList` 那篇文章）；而 `LinkedList` 是对链表的实现。而且是一个双向的链表：
 
 ![](C:\Users\jonas\Desktop\JavaCore\集合\img\linkedlist-2018-03-03.png)
+
+---
 
 ### 二、源码分析
 
@@ -83,7 +87,7 @@ public void addLast(E e) {
 
 ```java
 void linkLast(E e) {
-    final Node<E> l = last;//获取最后一个元素（这是没有添加前的哈）
+    final Node<E> l = last;//获取最后一个节点（这是没有添加前的哈）
     final Node<E> newNode = new Node<>(l, e, null);//构造一个Node，把刚才获取的最后一个元素作为上一个元素，e就是传递过来的元素作为最后一个元素，下元素必然为null
     last = newNode;//last是类中的一个属性，维护的就是最后一个元素，所以此处得修改
     if (l == null)//如果这个链表是空的，那就将这个新的Node赋给first这个属性，表示这是第一个元素
