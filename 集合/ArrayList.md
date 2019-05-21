@@ -1,14 +1,18 @@
 ##  ArrayList
 
+---
+
 ### 一、概述
 
-`ArrayList` 是实现 `List` 接口的有序的，元素可重复的动态数组。每个ArrayList实例都有一个容量，该容量是指用来存储列表元素的数组的大小。默认初始容量为10。随着ArrayList中元素的增加，它的容量也会不断的自动增长。在每次添加新的元素时，`ArrayList`都会检查是否需要进行扩容操作，扩容操作带来数据向新数组的重新拷贝，所以如果我们知道具体业务数据量，在构造`ArrayList`时可以给ArrayList指定一个初始容量，这样就会减少扩容时数据的拷贝问题。当然在添加大量元素前，应用程序也可以使用`ensureCapacity`操作来增加ArrayList实例的容量，这可以减少递增式再分配的数量。
+`ArrayList` 是实现 `List` 接口的有序的，元素可重复的动态数组。每个`ArrayList`实例都有一个容量，该容量是指用来存储列表元素的数组的大小。默认初始容量为10。随着ArrayList中元素的增加，它的容量也会不断的自动增长。在每次添加新的元素时，`ArrayList`都会检查是否需要进行扩容操作，扩容操作带来数据向新数组的重新拷贝，所以如果我们知道具体业务数据量，在构造`ArrayList`时可以给ArrayList指定一个初始容量，这样就会减少扩容时数据的拷贝问题。当然在添加大量元素前，应用程序也可以使用`ensureCapacity`操作来增加ArrayList实例的容量，这可以减少递增式再分配的数量。
 
 注意，`ArrayList` 实现不是同步的。如果多个线程同时访问一个 `ArrayList` 实例，而其中至少一个线程从结构上修改了列表，那么它必须保持外部同步。所以为了保证同步，最好的办法是在创建时完成，以防止以外对列表进行不同步的访问：
 
 ```java
 List list = Collections.synchronizedList(new ArrayList(...));
 ```
+
+---
 
 ### 二、ArrayList 源码分析
 
@@ -179,7 +183,6 @@ public boolean addAll(Collection<? extends E> c) {
 ```java
 public E set(int index, E element) {
     rangeCheck(index);
-
     E oldValue = elementData(index);
     elementData[index] = element;
     return oldValue;
@@ -211,7 +214,9 @@ public E remove(int index) {
 }
 ```
 
-作用：删除指定位置 `index` 的元素，并且将这个元素返回。
+**作用：删除指定位置 `index` 的元素，并且将这个元素返回。**
+
+
 
 ```java
 public boolean remove(Object o) {
@@ -232,7 +237,9 @@ public boolean remove(Object o) {
 }
 ```
 
-作用：删除指定的元素（如果有重复的，则删除首次出现的）
+**作用：删除指定的元素（如果有重复的，则删除首次出现的）**
+
+
 
 ```java
 protected void removeRange(int fromIndex, int toIndex) {
@@ -250,7 +257,9 @@ protected void removeRange(int fromIndex, int toIndex) {
 }
 ```
 
-作用：删除一个区间的元素。
+**作用：删除一个区间的元素。**
+
+
 
 ```java
 public void clear() {
@@ -264,7 +273,9 @@ public void clear() {
     }
 ```
 
-作用：删除所有元素。
+**作用：删除所有元素。**
+
+
 
 ##### iii. 查询方法
 
@@ -273,12 +284,13 @@ public void clear() {
 ```java
 public E get(int index) {
     rangeCheck(index);
-
     return elementData(index);
 }
 ```
 
 根据索引查询一个元素。
+
+---
 
 ### 三、ArrayList 高级特性
 
@@ -296,7 +308,7 @@ public boolean add(E e) {
 
 `ArrayList` 在添加一个元素的时候，它可能会有两步来完成：
 
-1. 在 `elementDate[size]` 的位置撒花姑娘存放此元素
+1. 在 `elementDate[size]` 的位置上存放此元素
 2. 增大 `size` 的值
 
 其本质上来讲是 `size++` 不是一个原子操作导致的线程安全问题，在单线程环境下，如果 `size=0` ，添加一个元素后，此元素在位置0，而且 `size=1` ；但是在多线程环境下，比如两个线程，A线程先将元素存放在位置0，但是此时 `CPU` 调度线程A暂停，线程B得到运行的机会，线程B也向此列表添加元素，因为此时 `size` 依然为0，所以线程 B也将元素存放到位置0，最后，两个线程都继续运行，都增加了`size`的值。
@@ -304,14 +316,14 @@ public boolean add(E e) {
 解决方案：
 
 - 使用同步代码块 `synchronized` 
-- 使用 `Collections.synchronizedList()`
+- 使用 `Collections.synchronizedList(new ArrayList())`
 - 使用 `JUC` 中的 `CopyOnWriteArrayList`
 
-具体的使用在后面总结多线程的时候再来好好研究他。
+
 
 #### 2. fail-fast 问题
 
-`fail-fast` 机制是 `java` 集合中的一种错误机制，当多个线程对同一个集合的内容进行操作时，就可能会产生 `fail-fast` 事件。例如：当某个线程A通过`iterator`去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出`ConcurrentModificationException` ，产生 `fail-fast` 事件。先看示例：
+`fail-fast` 机制是 `java` 集合中的一种错误机制，当多个线程对同一个集合的内容进行操作时，就可能会产生 `fail-fast` 事件。例如：当线程A通过`iterator`去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出`ConcurrentModificationException` ，产生 `fail-fast` 事件。先看示例：
 
 ```java
 public static void main(String[] args) {
